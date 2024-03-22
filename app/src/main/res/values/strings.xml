@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SBTask</string>
+    <string name="my_cards">My cards</string>
+    <string name="see_all">See All</string>
+    <string name="recent_transactions">Recent transactions</string>
+    <string name="payment">Payment</string>
+    <string name="back_icon">back icon</string>
+</resources>
