@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -40,24 +41,28 @@ fun TransactionItem(transaction: Transaction) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row {
-            Box(
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(color = Color(0xffF6F7F9), shape = CircleShape)
+        ) {
+            GlideImage(
+                model = transaction.merchant?.icon,
+                contentDescription = "logo icon",
+                contentScale = ContentScale.Crop,
+                failure = placeholder(R.drawable.ic_credit_card),
                 modifier = Modifier
-                    .size(40.dp)
-                    .background(color = Color(0xffF6F7F9), shape = CircleShape)
-            ) {
-                GlideImage(
-                    model = transaction.merchant?.icon,
-                    contentDescription = "logo icon",
-                    contentScale = ContentScale.Crop,
-                    failure = placeholder(R.drawable.ic_card_nav_bar),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .background(color = Color.Transparent, shape = CircleShape)
-                        .size(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(12.dp))
+                    .align(Alignment.Center)
+                    .background(color = Color.Transparent, shape = CircleShape)
+                    .size(24.dp)
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
             Column(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
@@ -73,22 +78,27 @@ fun TransactionItem(transaction: Transaction) {
                     overflow = TextOverflow.Ellipsis
                 )
 
+                if (!transaction.card?.cardLast4.isNullOrEmpty()) {
                     Text(
-                        text = transaction.card?.cardLast4 ?: "",
+                        text = "•• ${transaction.card?.cardLast4}",
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight(500),
                             color = Color(0xff7E8493)
                         ),
-                        modifier = if (!transaction.card?.cardLast4.isNullOrEmpty()) Modifier else Modifier
+                        modifier = if (transaction.card?.cardLast4!!.isNotEmpty()) Modifier else Modifier
                             .height(0.dp)
                             .width(0.dp)
                     )
-
+                }
             }
         }
 
-        Row {
+        Spacer(modifier = Modifier.width(16.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
             Text(
                 text = formatAmount(transaction.amount),
                 style = TextStyle(
@@ -99,20 +109,28 @@ fun TransactionItem(transaction: Transaction) {
                     } else {
                         Color(0xff2B2C39)
                     }
-                )
+                ),
+                maxLines = 1
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Image(painterResource(id = R.drawable.ic_receipt), contentDescription = "receipt image")
+            Image(
+                painterResource(id = if (transaction.status == "Success") R.drawable.ic_receipt else R.drawable.ic_card_nav_bar),
+                contentDescription = "receipt image"
+            )
         }
     }
-
 }
 
 fun formatAmount(amount: Double): String {
+    val formattedAmount = if (amount % 1 == 0.0) {
+        amount.toInt().toString()
+    } else {
+        amount.toString()
+    }
 
     return if (amount <= 0) {
-        "-$${amount.toString().substring(1)}"
+        "-$${formattedAmount.substring(1)}"
     } else {
-        "$$amount"
+        "$$formattedAmount"
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,9 +14,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -164,22 +167,29 @@ fun Cards(
                 )
             )
 
-            Text(
-                text = stringResource(R.string.see_all),
-                style = TextStyle(
-                    color = Color(0xff2B2C39),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(500),
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier.clickable { navigateToAllCards() }
-            )
+            TextButton(
+                onClick = { navigateToAllCards() },
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.see_all),
+                    style = TextStyle(
+                        color = Color(0xff1460F3),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(500),
+                    )
+                )
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         if (loading) {
             CircularProgressIndicator()
         } else {
-            CardsList(cards = cardList.subList(0, 3))
+            if (cardList.size > 3) {
+                CardsList(cards = cardList.subList(0, 3))
+            } else {
+                CardsList(cards = cardList)
+            }
         }
     }
 }
@@ -207,16 +217,19 @@ fun RecentTransactions(transactionList: List<Transaction>, navigateToTransaction
                 )
             )
 
-            Text(
-                text = stringResource(R.string.see_all),
-                style = TextStyle(
-                    color = Color(0xff2B2C39),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(500),
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier.clickable { navigateToTransactions() }
-            )
+            TextButton(
+                onClick = { navigateToTransactions() },
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.see_all),
+                    style = TextStyle(
+                        color = Color(0xff1460F3),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(500),
+                    )
+                )
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         TransactionList(transactionList = transactionList)
