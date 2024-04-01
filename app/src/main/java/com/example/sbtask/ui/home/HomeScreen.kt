@@ -2,6 +2,7 @@ package com.example.sbtask.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.layout.Arrangement
@@ -9,16 +10,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,7 +34,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -99,6 +109,7 @@ fun HomeBody(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         AvailableBalance()
+        BalanceActionBar()
         Cards(
             cardList = cardList,
             loading = loading,
@@ -118,25 +129,43 @@ fun AvailableBalance() {
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
             .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+            .clickable {
+                //TODO
+            }
             .padding(16.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painterResource(id = R.drawable.ic_usa_flag),
-                contentDescription = "currency flag"
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "USD account",
-                style = TextStyle(
-                    color = Color(0xff21222E),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(500)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painterResource(id = R.drawable.ic_usa_flag),
+                    contentDescription = "currency flag"
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "USD account",
+                    style = TextStyle(
+                        color = Color(0xff21222E),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(500)
+                    )
+                )
+            }
+
+            Image(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(color = Color.Black),
+                modifier = Modifier.size(24.dp)
             )
+
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -147,6 +176,95 @@ fun AvailableBalance() {
                 fontWeight = FontWeight(800)
             )
         )
+    }
+}
+
+@Composable
+fun BalanceActionBar() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+            .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .clickable {
+                    //TODO
+                }
+        ) {
+            Icon(painterResource(id = R.drawable.ic_arrow_down_left), contentDescription = null)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Add funds",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500),
+                )
+            )
+        }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(0.5.dp)
+                .background(color = Color(0xffF0F1F3))
+        )
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .clickable {
+                    //TODO
+                }
+        ) {
+            Icon(painterResource(id = R.drawable.ic_arrow_up_right), contentDescription = null)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Transfer",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500),
+                )
+            )
+        }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(0.5.dp)
+                .background(color = Color(0xffF0F1F3))
+        )
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .clickable {
+                    //TODO
+                }
+        ) {
+            Icon(painterResource(id = R.drawable.ic_credit_card), contentDescription = null)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Add card",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500),
+                )
+            )
+        }
     }
 }
 
@@ -243,8 +361,8 @@ fun RecentTransactions(
         Spacer(modifier = Modifier.height(16.dp))
         TransactionList(
             transactionList =
-            if (transactionList.size > 4) {
-                transactionList.subList(0, 4)
+            if (transactionList.size > 3) {
+                transactionList.subList(0, 3)
             } else transactionList,
             isLoading = loading
         )
