@@ -29,13 +29,15 @@ fun CardsScreen(
     cardsViewModel: CardsViewModel = hiltViewModel()
 ) {
     val cardsUiState by cardsViewModel.cardUiState.collectAsState()
+    val isLoading by cardsViewModel.loading.collectAsState()
 
     Scaffold(
         topBar = { MainTopBar(title = "My cards") }
     ) { paddingValues ->
         CardsBody(
             modifier = modifier.padding(paddingValues),
-            cards = cardsUiState.cardList
+            cards = cardsUiState.cardList,
+            isLoading = isLoading
             )
     }
 }
@@ -43,13 +45,14 @@ fun CardsScreen(
 @Composable
 fun CardsBody(
     modifier: Modifier = Modifier,
-    cards: List<Card>
+    cards: List<Card>,
+    isLoading: Boolean
     ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(16.dp)
     ) {
-        CardsList(cards = cards)
+        CardsList(cards = cards, isLoading = isLoading)
     }
 }

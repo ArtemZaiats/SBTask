@@ -9,12 +9,18 @@ import com.example.sbtask.R
 import com.example.sbtask.data.Transaction
 
 @Composable
-fun TransactionList(transactionList: List<Transaction>) {
+fun TransactionList(transactionList: List<Transaction>, isLoading: Boolean) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        items(transactionList) {
-            TransactionItem(transaction = it)
+        if (isLoading) {
+            items(3) {
+                TransactionShimmerItem()
+            }
+        } else {
+            items(transactionList) {
+                TransactionItem(transaction = it)
+            }
         }
     }
 }

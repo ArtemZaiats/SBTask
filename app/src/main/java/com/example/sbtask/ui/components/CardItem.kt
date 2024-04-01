@@ -77,6 +77,6 @@ fun CardItem(card: Card) {
                 )
             )
         }
-        Image(painterResource(id = R.drawable.ic_arrow_next), contentDescription = "next icon")
+//        Image(painterResource(id = R.drawable.ic_arrow_next), contentDescription = "next icon")
     }
 }

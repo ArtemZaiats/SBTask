@@ -17,27 +17,30 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(private val remoteRepository: RemoteRepository) :
     ViewModel() {
 
-    private val _transactionUiState = MutableStateFlow(TransactionUiState())
+    private val _transactionUiState = MutableStateFlow(TransactionUiState(loading = false))
     val transactionUiState: StateFlow<TransactionUiState> = _transactionUiState
 
     init {
         getAllTransactions()
     }
 
-    fun getAllTransactions() {
+    private fun getAllTransactions() {
         viewModelScope.launch(Dispatchers.IO) {
+            _transactionUiState.value = transactionUiState.value.copy(loading = true)
             remoteRepository.fetchAllTransactions().collect {
                 when (it) {
                     is NetworkResult.Success -> {
-                        _transactionUiState.value = TransactionUiState(it.data?.transactions!!)
+                        _transactionUiState.value = TransactionUiState(it.data?.transactions!!, false)
                     }
 
                     is NetworkResult.Loading -> {
                         Log.d("CardsViewModel", "loading()")
+                        _transactionUiState.value = transactionUiState.value.copy(loading = true)
                     }
 
                     is NetworkResult.Error -> {
                         Log.e("CardsViewModel", "error: ${it.message}")
+                        _transactionUiState.value = _transactionUiState.value.copy(loading = false)
                     }
                 }
             }
@@ -45,4 +48,4 @@ class TransactionsViewModel @Inject constructor(private val remoteRepository: Re
     }
 }
 
-data class TransactionUiState(val transactionList: List<Transaction> = listOf())
+data class TransactionUiState(val transactionList: List<Transaction> = listOf(), val loading: Boolean)

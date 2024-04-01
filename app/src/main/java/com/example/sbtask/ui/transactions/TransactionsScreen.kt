@@ -31,7 +31,8 @@ fun TransactionsScreen(viewModel: TransactionsViewModel = hiltViewModel()) {
     ) {
         TransactionsBody(
             modifier = Modifier.padding(it),
-            transactions = transactionsUiState.transactionList
+            transactions = transactionsUiState.transactionList,
+            loading = transactionsUiState.loading
         )
     }
 }
@@ -39,13 +40,14 @@ fun TransactionsScreen(viewModel: TransactionsViewModel = hiltViewModel()) {
 @Composable
 fun TransactionsBody(
     modifier: Modifier = Modifier,
-    transactions: List<Transaction>
+    transactions: List<Transaction>,
+    loading: Boolean
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(horizontal = 16.dp)
     ) {
-        TransactionList(transactionList = transactions)
+        TransactionList(transactionList = transactions, isLoading = loading)
     }
 }

@@ -3,6 +3,7 @@ package com.example.sbtask.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -40,8 +43,10 @@ import com.example.sbtask.data.Transaction
 import com.example.sbtask.ui.cards.CardsViewModel
 import com.example.sbtask.ui.components.CardsList
 import com.example.sbtask.ui.components.MainTopBar
+import com.example.sbtask.ui.components.ShimmerCardItem
 import com.example.sbtask.ui.components.TransactionList
 import com.example.sbtask.ui.navigation.NavigationDestination
+import com.example.sbtask.ui.transactions.TransactionUiState
 import com.example.sbtask.ui.transactions.TransactionsViewModel
 
 object HomeDestination : NavigationDestination {
@@ -67,7 +72,7 @@ fun HomeScreen(
     ) { paddingValues ->
         HomeBody(
             cardList = cardsUiState.cardList,
-            transactionList = transactionUiState.transactionList,
+            transactionUiState = transactionUiState,
             loading = cardsLoading,
             navigateToAllCards = navigateToAllCardsScreen,
             navigateToTransactions = navigateToTransactionsScreen,
@@ -80,7 +85,7 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     cardList: List<Card>,
-    transactionList: List<Transaction>,
+    transactionUiState: TransactionUiState,
     loading: Boolean,
     navigateToAllCards: () -> Unit,
     navigateToTransactions: () -> Unit,
@@ -94,9 +99,14 @@ fun HomeBody(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         AvailableBalance()
-        Cards(cardList = cardList, loading = loading, navigateToAllCards = navigateToAllCards)
+        Cards(
+            cardList = cardList,
+            loading = loading,
+            navigateToAllCards = navigateToAllCards
+        )
         RecentTransactions(
-            transactionList = transactionList,
+            transactionList = transactionUiState.transactionList,
+            loading = transactionUiState.loading,
             navigateToTransactions = navigateToTransactions
         )
     }
@@ -182,20 +192,19 @@ fun Cards(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (loading) {
-            CircularProgressIndicator()
-        } else {
-            if (cardList.size > 3) {
-                CardsList(cards = cardList.subList(0, 3))
-            } else {
-                CardsList(cards = cardList)
-            }
-        }
+        CardsList(
+            cards = if (cardList.size > 3) cardList.subList(0, 3) else cardList,
+            isLoading = loading
+        )
     }
 }
 
 @Composable
-fun RecentTransactions(transactionList: List<Transaction>, navigateToTransactions: () -> Unit) {
+fun RecentTransactions(
+    transactionList: List<Transaction>,
+    loading: Boolean,
+    navigateToTransactions: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -232,6 +241,12 @@ fun RecentTransactions(transactionList: List<Transaction>, navigateToTransaction
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        TransactionList(transactionList = transactionList)
+        TransactionList(
+            transactionList =
+            if (transactionList.size > 4) {
+                transactionList.subList(0, 4)
+            } else transactionList,
+            isLoading = loading
+        )
     }
 }
