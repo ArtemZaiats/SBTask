@@ -33,7 +33,7 @@ import com.example.sbtask.data.Card
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun CardItem(card: Card) {
+fun CardItem(card: Card, showArrow: Boolean) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -77,6 +77,8 @@ fun CardItem(card: Card) {
                 )
             )
         }
-//        Image(painterResource(id = R.drawable.ic_arrow_next), contentDescription = "next icon")
+        if (showArrow) {
+            Image(painterResource(id = R.drawable.ic_arrow_next), contentDescription = "next icon")
+        }
     }
 }

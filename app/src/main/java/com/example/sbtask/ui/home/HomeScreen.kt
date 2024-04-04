@@ -312,7 +312,8 @@ fun Cards(
         Spacer(modifier = Modifier.height(16.dp))
         CardsList(
             cards = if (cardList.size > 3) cardList.subList(0, 3) else cardList,
-            isLoading = loading
+            isLoading = loading,
+            showArrow = false
         )
     }
 }

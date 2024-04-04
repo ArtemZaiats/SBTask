@@ -53,6 +53,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -77,7 +78,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hilt_version"]}")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    
+
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
     //testing
     testImplementation("junit:junit:4.13.2")

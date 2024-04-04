@@ -10,7 +10,7 @@ import com.example.sbtask.R
 import com.example.sbtask.data.Card
 
 @Composable
-fun CardsList(cards: List<Card>, isLoading: Boolean) {
+fun CardsList(cards: List<Card>, isLoading: Boolean, showArrow: Boolean) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
@@ -22,7 +22,7 @@ fun CardsList(cards: List<Card>, isLoading: Boolean) {
             }
         } else {
             items(cards) {
-                CardItem(card = it)
+                CardItem(card = it, showArrow = showArrow)
             }
         }
     }

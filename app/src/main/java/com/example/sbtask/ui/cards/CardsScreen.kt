@@ -53,6 +53,6 @@ fun CardsBody(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(16.dp)
     ) {
-        CardsList(cards = cards, isLoading = isLoading)
+        CardsList(cards = cards, isLoading = isLoading, showArrow = true)
     }
 }
