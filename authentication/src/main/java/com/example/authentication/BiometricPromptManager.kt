@@ -1,5 +1,6 @@
-package com.example.sbtask.ui.authentication
+package com.example.authentication
 
+import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
@@ -7,27 +8,26 @@ import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.PromptInfo
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import javax.inject.Inject
 
-class BiometricPromptManager(
-    private val activity: AppCompatActivity
-) {
+class BiometricPromptManager @Inject constructor(
+    @ActivityContext private val activity: Context
+) : IBiometricPromptManager {
     private val resultChannel = Channel<BiometricResult>()
-    val promptResult = resultChannel.receiveAsFlow()
 
-    fun showBiometricPrompt(
-        title: String,
-        description: String
-    ) {
+    override val promptResult = resultChannel.receiveAsFlow()
+
+    override fun showBiometricPrompt() {
         val manager = BiometricManager.from(activity)
         val authenticators = if (Build.VERSION.SDK_INT >= 30) {
             BIOMETRIC_STRONG or DEVICE_CREDENTIAL
         } else BIOMETRIC_STRONG
 
         val promptInfo = PromptInfo.Builder()
-            .setTitle(title)
-            .setDescription(description)
+            .setTitle("Scan to login")
             .setAllowedAuthenticators(authenticators)
 
         if (Build.VERSION.SDK_INT < 30) {
@@ -54,7 +54,7 @@ class BiometricPromptManager(
         }
 
         val prompt = BiometricPrompt(
-            activity,
+            activity as AppCompatActivity,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)

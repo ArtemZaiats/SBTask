@@ -26,18 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontVariation
 import androidx.navigation.compose.rememberNavController
-import com.example.sbtask.ui.authentication.BiometricPromptManager
+import com.example.authentication.BiometricPromptManager
+import com.example.authentication.IBiometricPromptManager
 import com.example.sbtask.ui.navigation.AppNavHost
 import com.example.sbtask.ui.navigation.BottomNavigationBar
 import com.example.sbtask.ui.theme.SBTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val promptManager by lazy {
-        BiometricPromptManager(this)
-    }
+    @Inject lateinit var promptManager: IBiometricPromptManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,10 +71,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    promptManager.showBiometricPrompt(
-                        title = "Scan to login",
-                        description = ""
-                    )
+                    promptManager.showBiometricPrompt()
 
                     biometricResult?.let { result ->
                         when (result) {

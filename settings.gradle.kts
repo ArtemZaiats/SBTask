@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SBTask"
 include(":app")
- 
+include(":app:authentication")
+include(":authentication")
